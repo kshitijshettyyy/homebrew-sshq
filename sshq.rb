@@ -1,16 +1,23 @@
 class Sshq < Formula
-  desc "SSH Simplified for Devs"
+  desc "SSH alias manager and connector"
   homepage "https://github.com/TheBoredEngineers/sshq"
-  url "https://github.com/TheBoredEngineers/sshq/releases/download/v1.0.3/sshq"
-  sha256 "4b5b37c620b62076f072b1d5907676176f28ef8a6e485a6ac67411e91024e81c"
+  version "1.1.0"
   license "MIT"
 
+  if Hardware::CPU.arm?
+    url "https://github.com/TheBoredEngineers/sshq/releases/download/v1.1.0/sshq_darwin_arm64"
+    sha256 "<AUTOMATED>"
+  else
+    url "https://github.com/TheBoredEngineers/sshq/releases/download/v1.1.0/sshq_darwin_amd64"
+    sha256 "<update-manually-if-needed>"
+  end
+
   def install
-    bin.install "sshq"
+    bin.install "sshq_darwin_#{Hardware::CPU.arm? ? "arm64" : "amd64"}" => "sshq"
   end
 
   test do
-    system "#{bin}/sshq"
+    assert_match "sshq", shell_output("#{bin}/sshq --help")
   end
 end
 
